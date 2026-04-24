@@ -374,6 +374,7 @@ class FileOrigin(str, Enum):
     CHAT_UPLOAD = "chat_upload"
     CHAT_IMAGE_GEN = "chat_image_gen"
     CONNECTOR = "connector"
+    CONNECTOR_FILE_UPLOAD = "connector_file_upload"
     CONNECTOR_METADATA = "connector_metadata"
     GENERATED_REPORT = "generated_report"
     INDEXING_CHECKPOINT = "indexing_checkpoint"
@@ -456,6 +457,7 @@ class OnyxRedisLocks:
         "da_lock:check_connector_external_group_sync_beat"
     )
     OPENSEARCH_MIGRATION_BEAT_LOCK = "da_lock:opensearch_migration_beat"
+    OPENSEARCH_VERIFY_INDEX_LOCK_PREFIX = "da_lock:opensearch_verify_index"
 
     MONITOR_BACKGROUND_PROCESSES_LOCK = "da_lock:monitor_background_processes"
     CHECK_AVAILABLE_TENANTS_LOCK = "da_lock:check_available_tenants"
