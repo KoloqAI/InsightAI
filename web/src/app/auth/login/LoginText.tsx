@@ -6,15 +6,16 @@ import Text from "@/refresh-components/texts/Text";
 
 export default function LoginText() {
   const settings = useContext(SettingsContext);
+  const applicationName =
+    (settings && settings?.enterpriseSettings?.application_name) || "Insight";
+
   return (
-    <div className="w-full flex flex-col ">
+    <div className="w-full flex flex-col">
       <Text as="p" headingH2 text05>
-        Welcome to{" "}
-        {(settings && settings?.enterpriseSettings?.application_name) ||
-          "Insight"}
+        Welcome back
       </Text>
       <Text as="p" text03 mainUiMuted>
-        Your AI-powered insight platform for work
+        Sign in to your {applicationName} workspace
       </Text>
     </div>
   );

@@ -480,6 +480,21 @@ textarea {
   animation: waveform 0.8s ease-in-out infinite;
 }
 
+/* Auth showcase: gentle float for floating feature chips on the login backdrop. */
+@keyframes auth-chip-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-auth-chip-float {
+  animation: auth-chip-float 9s ease-in-out infinite;
+}
+
 .container {
   margin-bottom: 1rem;
 }
