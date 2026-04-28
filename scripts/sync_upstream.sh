@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# Sync this InsightAI fork with upstream onyx-dot-app/onyx.
+# Sync this Insight fork with upstream onyx-dot-app/onyx.
 #
 # Usage:
 #   scripts/sync_upstream.sh              # fetch + merge (default)
 #   scripts/sync_upstream.sh rebase       # fetch + rebase onto upstream/main
 #   scripts/sync_upstream.sh fetch-only   # fetch only
 #
-# The only files that should conflict during a sync are the InsightAI brand
+# The only files that should conflict during a sync are the Insight brand
 # patches, which are listed in project_documentation.md under "Branding
-# patches". Resolve those conflicts by keeping the InsightAI side and move on.
+# patches". Resolve those conflicts by keeping the Insight side and move on.
 
 set -euo pipefail
 
@@ -43,19 +43,29 @@ case "${MODE}" in
 
 [sync] merge conflict detected.
 
-Expected conflict surface (InsightAI brand patches):
+Expected conflict surface (Insight fork patches):
+
+  Branding patches:
   - backend/onyx/configs/constants.py        (ONYX_DEFAULT_APPLICATION_NAME)
-  - web/src/providers/DynamicMetadata.tsx    ("Onyx" fallback)
+  - web/src/providers/DynamicMetadata.tsx    ("Insight" fallback)
   - web/src/app/layout.tsx                   (metadata.title, description)
-  - web/src/app/auth/login/LoginText.tsx     ("Onyx" fallback)
+  - web/src/app/auth/login/LoginText.tsx     ("Insight" fallback)
   - web/src/lib/constants.ts                 (APP_SLOGAN)
   - README.md                                (title + fork notice)
   - web/public/logo.svg
-  - web/public/onyx.ico
+  - web/public/insight.svg
+  - web/public/insight.ico
   - backend/static/images/logo.png
   - backend/static/images/logotype.png
 
-Resolve by keeping the InsightAI side ("ours") for those files, then:
+  Build / infra patches:
+  - deployment/docker_compose/docker-compose.yml  (image names, project name)
+  - deployment/docker_compose/env.template        (image defaults, branding env)
+  - docker-bake.hcl                               (image repos, no registry cache)
+  - run-platform.sh                               (project name, messaging)
+  - .devcontainer/devcontainer.json               (local build, network name)
+
+Resolve by keeping the Insight side ("ours") for those files, then:
   git add <resolved files>
   git commit
 

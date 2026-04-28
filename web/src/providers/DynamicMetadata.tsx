@@ -7,7 +7,7 @@ export default function DynamicMetadata() {
   const { enterpriseSettings } = useSettingsContext();
 
   useEffect(() => {
-    const title = enterpriseSettings?.application_name || "InsightAI";
+    const title = enterpriseSettings?.application_name || "Insight";
     if (document.title !== title) {
       document.title = title;
     }
@@ -22,7 +22,13 @@ export default function DynamicMetadata() {
 
   const favicon = enterpriseSettings?.use_custom_logo
     ? `/api/enterprise-settings/logo?v=${cacheBuster}`
-    : "/onyx.ico";
+    : "/insight.svg";
 
-  return <link rel="icon" href={favicon} />;
+  return (
+    <>
+      <link rel="icon" type="image/svg+xml" href={favicon} />
+      <link rel="alternate icon" type="image/x-icon" href="/insight.ico" />
+      <link rel="shortcut icon" href="/insight.ico" />
+    </>
+  );
 }

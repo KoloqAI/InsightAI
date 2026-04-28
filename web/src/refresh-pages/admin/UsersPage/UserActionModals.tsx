@@ -84,7 +84,7 @@ export function CancelInviteModal({
         <Text as="span" text05>
           {email}
         </Text>{" "}
-        will no longer be able to join Onyx with this invite.
+        will no longer be able to join Insight with this invite.
       </Text>
     </ConfirmationModalLayout>
   );
@@ -138,9 +138,9 @@ export function DeactivateUserModal({
         <Text as="span" text05>
           {email}
         </Text>{" "}
-        will immediately lose access to Onyx. Their sessions and agents will be
-        preserved. Their license seat will be freed. You can reactivate this
-        account later.
+        will immediately lose access to Insight. Their sessions and agents
+        will be preserved. Their license seat will be freed. You can reactivate
+        this account later.
       </Text>
     </ConfirmationModalLayout>
   );
@@ -191,7 +191,7 @@ export function ActivateUserModal({
         <Text as="span" text05>
           {email}
         </Text>{" "}
-        will regain access to Onyx.
+        will regain access to Insight.
       </Text>
     </ConfirmationModalLayout>
   );
@@ -245,8 +245,8 @@ export function DeleteUserModal({
         <Text as="span" text05>
           {email}
         </Text>{" "}
-        will be permanently removed from Onyx. All of their session history will
-        be deleted. Deletion cannot be undone.
+        will be permanently removed from Insight. All of their session
+        history will be deleted. Deletion cannot be undone.
       </Text>
     </ConfirmationModalLayout>
   );

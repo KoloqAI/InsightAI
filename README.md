@@ -1,28 +1,28 @@
 <a name="readme-top"></a>
 
 <h1 align="center">
-    <img width="128" src="web/public/logo.svg" alt="InsightAI" />
+    <img width="128" src="web/public/logo.svg" alt="Insight" />
     <br/>
-    InsightAI
+    Insight
 </h1>
 
 <p align="center">AI-Powered Insight Platform</p>
 
 <p align="center">
-    <a href="https://github.com/KoloqAI/InsightAI" target="_blank">
-        <img src="https://img.shields.io/badge/repo-KoloqAI%2FInsightAI-blue" alt="Repository" />
+    <a href="https://github.com/KoloqAI/Insight" target="_blank">
+        <img src="https://img.shields.io/badge/repo-KoloqAI%2FInsight-blue" alt="Repository" />
     </a>
     <a href="https://github.com/onyx-dot-app/onyx" target="_blank">
         <img src="https://img.shields.io/badge/upstream-onyx--dot--app%2Fonyx-black" alt="Upstream Onyx" />
     </a>
-    <a href="https://github.com/KoloqAI/InsightAI/blob/main/LICENSE" target="_blank">
+    <a href="https://github.com/KoloqAI/Insight/blob/main/LICENSE" target="_blank">
         <img src="https://img.shields.io/static/v1?label=license&message=MIT&color=blue" alt="License" />
     </a>
 </p>
 
 > ### Fork notice
 >
-> **InsightAI** is a rebranded fork of [Onyx](https://github.com/onyx-dot-app/onyx)
+> **Insight** is a rebranded fork of [Onyx](https://github.com/onyx-dot-app/onyx)
 > (formerly Danswer). All core features, connectors, and documentation from the
 > upstream project apply here unchanged.
 >
@@ -35,14 +35,14 @@
 
 ---
 
-**InsightAI** is the application layer for LLMs — bringing a feature-rich interface that can be easily hosted by anyone.
-InsightAI enables LLMs through advanced capabilities like RAG, web search, code execution, file creation, deep research, and more.
+**Insight** is the application layer for LLMs — bringing a feature-rich interface that can be easily hosted by anyone.
+Insight enables LLMs through advanced capabilities like RAG, web search, code execution, file creation, deep research, and more.
 
 Connect your applications with over 50+ indexing based connectors provided out of the box or via MCP.
 
 > [!TIP]
 > Most operational documentation still lives at the upstream project's docs
-> site: <https://docs.onyx.app>. Substitute "InsightAI" anywhere you see "Onyx"
+> site: <https://docs.onyx.app>. Substitute "Insight" anywhere you see "Onyx"
 > in user-facing copy.
 
 ![Onyx Chat Silent Demo](https://github.com/onyx-dot-app/onyx/releases/download/v3.0.0/Onyx.gif)
@@ -60,12 +60,12 @@ Connect your applications with over 50+ indexing based connectors provided out o
   - Supports Serper, Google PSE, Brave, SearXNG, and others.
   - Comes with an in house web crawler and support for Firecrawl/Exa.
 - **📄 Artifacts:** Generate documents, graphics, and other downloadable artifacts.
-- **▶️ Actions & MCP:** Let InsightAI agents interact with external applications, comes with flexible Auth options.
+- **▶️ Actions & MCP:** Let Insight agents interact with external applications, comes with flexible Auth options.
 - **💻 Code Execution:** Execute code in a sandbox to analyze data, render graphs, or modify files.
-- **🎙️ Voice Mode:** Chat with InsightAI via text-to-speech and speech-to-text.
+- **🎙️ Voice Mode:** Chat with Insight via text-to-speech and speech-to-text.
 - **🎨 Image Generation:** Generate images based on user prompts.
 
-InsightAI supports all major LLM providers, both self-hosted (like Ollama, LiteLLM, vLLM, etc.) and proprietary (like Anthropic, OpenAI, Gemini, etc.).
+Insight supports all major LLM providers, both self-hosted (like Ollama, LiteLLM, vLLM, etc.) and proprietary (like Anthropic, OpenAI, Gemini, etc.).
 
 To learn more about the features, check out the upstream [Onyx documentation](https://docs.onyx.app/welcome).
 
@@ -73,7 +73,7 @@ To learn more about the features, check out the upstream [Onyx documentation](ht
 
 ## 🚀 Deployment Modes
 
-> InsightAI supports deployments in Docker, Kubernetes, Helm/Terraform and provides guides for major cloud providers.
+> Insight supports deployments in Docker, Kubernetes, Helm/Terraform and provides guides for major cloud providers.
 > Detailed deployment guides found [here](https://docs.onyx.app/deployment/overview).
 
 Onyx supports two separate deployment options: standard and lite.
@@ -81,7 +81,7 @@ Onyx supports two separate deployment options: standard and lite.
 #### Onyx Lite
 
 The Lite mode can be thought of as a lightweight Chat UI. It requires less resources (under 1GB memory) and runs a less complex stack.
-It is great for users who want to test out InsightAI quickly or for teams who are only interested in the Chat UI and Agents functionalities.
+It is great for users who want to test out Insight quickly or for teams who are only interested in the Chat UI and Agents functionalities.
 
 #### Standard Onyx
 
@@ -91,9 +91,9 @@ The complete feature set which is recommended for serious users and larger teams
 - AI model inference servers to run deep learning models used during indexing and inference.
 - Performance optimizations for large scale use via in memory cache (Redis) and blob store (MinIO).
 
-## 🏢 InsightAI for Enterprise
+## 🏢 Insight for Enterprise
 
-InsightAI is built for teams of all sizes, from individual users to the largest global enterprises:
+Insight is built for teams of all sizes, from individual users to the largest global enterprises:
 - **Collaboration:** Share chats and agents with other members of your organization.
 - **Single Sign On:** SSO via Google OAuth, OIDC, or SAML. Group syncing and user provisioning via SCIM.
 - **Role Based Access Control:** RBAC for sensitive resources like access to agents, actions, etc.
@@ -112,7 +112,7 @@ This fork pulls changes from [`onyx-dot-app/onyx`](https://github.com/onyx-dot-a
 scripts/sync_upstream.sh          # fetch and merge upstream/main
 ```
 
-Only a small set of files carry InsightAI brand patches; see the "Branding patches" section in [project_documentation.md](project_documentation.md) for the full list. Any merge conflict should be confined to those files and is mechanical to resolve.
+Only a small set of files carry Insight brand patches; see the "Branding patches" section in [project_documentation.md](project_documentation.md) for the full list. Any merge conflict should be confined to those files and is mechanical to resolve.
 
 ## 📚 Licensing
 This fork preserves the upstream Onyx licensing model:
@@ -123,4 +123,4 @@ This fork preserves the upstream Onyx licensing model:
 See [LICENSE](LICENSE) and [backend/ee/LICENSE](backend/ee/LICENSE).
 
 ## 💡 Contributing
-Bugs and fixes that are generally applicable should be contributed upstream to [`onyx-dot-app/onyx`](https://github.com/onyx-dot-app/onyx) where appropriate. InsightAI-specific changes (branding, packaging) stay in this fork.
+Bugs and fixes that are generally applicable should be contributed upstream to [`onyx-dot-app/onyx`](https://github.com/onyx-dot-app/onyx) where appropriate. Insight-specific changes (branding, packaging) stay in this fork.

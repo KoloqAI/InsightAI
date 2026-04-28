@@ -50,8 +50,16 @@ const dmMono = DM_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "InsightAI",
+  title: "Insight",
   description: "AI-powered insight and question answering for your documents",
+  icons: {
+    icon: [
+      { url: "/insight.svg", type: "image/svg+xml" },
+      { url: "/insight.ico", sizes: "any", type: "image/x-icon" },
+    ],
+    shortcut: "/insight.ico",
+    apple: "/insight.svg",
+  },
 };
 
 // force-dynamic prevents Next.js from statically prerendering pages at build

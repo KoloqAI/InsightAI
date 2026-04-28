@@ -11,10 +11,10 @@ export default function LoginText() {
       <Text as="p" headingH2 text05>
         Welcome to{" "}
         {(settings && settings?.enterpriseSettings?.application_name) ||
-          "InsightAI"}
+          "Insight"}
       </Text>
       <Text as="p" text03 mainUiMuted>
-        Your open source AI platform for work
+        Your AI-powered insight platform for work
       </Text>
     </div>
   );

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # run-platform.sh
-# Helper to run the Onyx platform locally via Docker Compose.
+# Helper to run the Insight platform locally via Docker Compose.
 #
 # Usage:
 #   ./run-platform.sh dev              Rebuild images from local source and bring up the
@@ -25,10 +25,17 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 COMPOSE_DIR="${SCRIPT_DIR}/deployment/docker_compose"
-COMPOSE_PROJECT_NAME="onyx"
+COMPOSE_PROJECT_NAME="insight"
 
 BASE_COMPOSE_FILE="docker-compose.yml"
 DEV_COMPOSE_FILE="docker-compose.dev.yml"
+
+# Nginx caches upstream IPs at config-load time. When api_server (or any other
+# upstream behind nginx) is recreated, nginx keeps hitting the stale IP and
+# returns 502 for /api/* until it is reloaded. We restart it after every `up`
+# to guarantee a correct routing table without touching the upstream nginx
+# config (which would create recurring merge conflicts with upstream).
+NGINX_CONTAINER="${COMPOSE_PROJECT_NAME}-nginx-1"
 
 ENV_FILE="${COMPOSE_DIR}/.env"
 ENV_TEMPLATE="${COMPOSE_DIR}/env.template"
@@ -115,6 +122,26 @@ compose_base() {
   )
 }
 
+# Force nginx to re-resolve upstream hostnames. Idempotent and cheap (~2s) —
+# it is a no-op when nginx was just freshly created, and a fix when an
+# upstream container (api_server, web_server) has been recreated with a new
+# internal IP while nginx stayed up.
+reconcile_nginx() {
+  # Is the container present at all?
+  if ! docker inspect "${NGINX_CONTAINER}" >/dev/null 2>&1; then
+    warn "Nginx container '${NGINX_CONTAINER}' not found; skipping re-resolve."
+    return 0
+  fi
+
+  log "Restarting nginx to re-resolve upstream hostnames..."
+  if docker restart "${NGINX_CONTAINER}" >/dev/null 2>&1; then
+    ok "Nginx restarted; /api/* proxy is routing to the current api_server."
+  else
+    warn "Failed to restart '${NGINX_CONTAINER}'. If /api/* returns 502, run:"
+    warn "  docker restart ${NGINX_CONTAINER}"
+  fi
+}
+
 # Destructive: remove containers, networks, named volumes, images built by this
 # compose project, and orphan containers. Data will be lost.
 wipe_everything() {
@@ -170,7 +197,7 @@ cmd_dev() {
     wipe_everything
   fi
 
-  log "Starting Onyx platform in dev mode..."
+  log "Starting Insight platform in dev mode..."
   log "Compose files: ${BASE_COMPOSE_FILE} + ${DEV_COMPOSE_FILE}"
   log "Working dir:   ${COMPOSE_DIR}"
 
@@ -187,7 +214,10 @@ cmd_dev() {
 
   compose_dev up "${up_args[@]}"
 
-  ok "Onyx platform is up."
+  # Post-up: nudge nginx so it picks up the current IPs of recreated upstreams.
+  reconcile_nginx
+
+  ok "Insight platform is up."
   log "Quick links:"
   log "  Web UI     : http://localhost:3000"
   log "  API server : http://localhost:8080"
@@ -211,7 +241,7 @@ cmd_down() {
   if [[ "${clean}" == "true" ]]; then
     wipe_everything
   else
-    log "Stopping Onyx platform (data preserved)..."
+    log "Stopping Insight platform (data preserved)..."
     compose_dev down --remove-orphans
     ok "Platform stopped."
   fi

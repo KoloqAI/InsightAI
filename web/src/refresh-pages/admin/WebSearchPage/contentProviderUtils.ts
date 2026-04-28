@@ -17,11 +17,11 @@ export const CONTENT_PROVIDER_DETAILS: Record<
   }
 > = {
   onyx_web_crawler: {
-    label: "Onyx Web Crawler",
+    label: "Insight Web Crawler",
     subtitle:
       "Built-in web crawler. Works for most pages but less performant in edge cases.",
     description:
-      "Onyx's built-in crawler processes URLs returned by your search engine.",
+      "Insight's built-in crawler processes URLs returned by your search engine.",
   },
   firecrawl: {
     label: "Firecrawl",

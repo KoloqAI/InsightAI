@@ -56,7 +56,7 @@ def require_onyx_craft_enabled(
     if not is_onyx_craft_enabled(user):
         raise HTTPException(
             status_code=403,
-            detail="Onyx Craft is not available",
+            detail="Insight Craft is not available",
         )
     return user
 

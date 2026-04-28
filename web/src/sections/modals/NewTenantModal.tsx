@@ -12,8 +12,7 @@ import { useRouter } from "next/navigation";
 import Text from "@/refresh-components/texts/Text";
 import { InputErrorText } from "@opal/layouts";
 
-// App domain should not be hardcoded
-const APP_DOMAIN = process.env.NEXT_PUBLIC_APP_DOMAIN || "onyx.app";
+const APP_DOMAIN = process.env.NEXT_PUBLIC_APP_DOMAIN || "Insight";
 
 export interface NewTenantModalProps {
   tenantInfo: NewTenantInfo;

@@ -74,13 +74,13 @@ def validate_user_role_update(
     if current_account_type == AccountType.BOT:
         raise HTTPException(
             status_code=400,
-            detail="To change a Slack User's role, they must first login to Onyx via the web app.",
+            detail="To change a Slack User's role, they must first login to Insight via the web app.",
         )
 
     if current_account_type == AccountType.EXT_PERM_USER:
         raise HTTPException(
             status_code=400,
-            detail="To change an External Permissioned User's role, they must first login to Onyx via the web app.",
+            detail="To change an External Permissioned User's role, they must first login to Insight via the web app.",
         )
 
     if current_account_type in (AccountType.ANONYMOUS, AccountType.SERVICE_ACCOUNT):
@@ -115,7 +115,7 @@ def validate_user_role_update(
             status_code=400,
             detail=(
                 "A user cannot be set to a Slack User role. "
-                "This role is automatically assigned to users who only use Onyx via Slack."
+                "This role is automatically assigned to users who only use Insight via Slack."
             ),
         )
 

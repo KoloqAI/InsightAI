@@ -169,7 +169,7 @@ async def search_indexed_documents(
             "query": query,
             "message": (
                 "No document sources are indexed yet. Add connectors or upload data "
-                "through Onyx before calling onyx_search_documents."
+                "through Insight before calling onyx_search_documents."
             ),
         }
 

@@ -298,7 +298,7 @@ def validate_no_vector_db_settings() -> None:
     if ENABLE_CRAFT:
         raise RuntimeError(
             "DISABLE_VECTOR_DB cannot be used with ENABLE_CRAFT. "
-            "Onyx Craft requires background workers for sandbox lifecycle "
+            "Insight Craft requires background workers for sandbox lifecycle "
             "management, which are removed in no-vector-DB deployments. "
             "Disable Craft (ENABLE_CRAFT=false) when disabling the vector database."
         )
@@ -424,11 +424,11 @@ def log_http_error(request: Request, exc: Exception) -> JSONResponse:
 
 def get_application(lifespan_override: Lifespan | None = None) -> FastAPI:
     application = FastAPI(
-        title="Onyx Backend",
+        title="Insight Backend",
         version=__version__,
-        description="Onyx API for AI-powered chat with search, document indexing, agents, actions, and more",
+        description="Insight API for AI-powered chat with search, document indexing, agents, actions, and more",
         servers=[
-            {"url": f"{WEB_DOMAIN.rstrip('/')}/api", "description": "Onyx API Server"}
+            {"url": f"{WEB_DOMAIN.rstrip('/')}/api", "description": "Insight API Server"}
         ],
         lifespan=lifespan_override or lifespan,
     )
@@ -700,7 +700,7 @@ app = fetch_versioned_implementation(module="onyx.main", attribute="get_applicat
 
 if __name__ == "__main__":
     logger.notice(
-        f"Starting Onyx Backend version {__version__} on http://{APP_HOST}:{str(APP_PORT)}/"
+        f"Starting Insight Backend version {__version__} on http://{APP_HOST}:{str(APP_PORT)}/"
     )
 
     if global_version.is_ee_version():

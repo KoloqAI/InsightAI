@@ -16,7 +16,7 @@ import Button from "@/refresh-components/buttons/Button";
 import { errorHandlingFetcher } from "@/lib/fetcher";
 
 const TOGGLE_DISABLED_MESSAGE =
-  "Changing the retrieval source is not currently possible for this instance of Onyx.";
+  "Changing the retrieval source is not currently possible for this instance of Insight.";
 
 interface MigrationStatus {
   total_chunks_migrated: number;

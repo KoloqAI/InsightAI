@@ -1,4 +1,4 @@
-# InsightAI Project Documentation
+# Insight Project Documentation
 
 > Forked from [Onyx](https://github.com/onyx-dot-app/onyx) (formerly Danswer) — an open-source
 > Gen-AI and Enterprise Search platform that connects to company documents, apps, and people.
@@ -16,7 +16,7 @@
 
 ---
 
-## 0. Rebrand Overview (InsightAI)
+## 0. Rebrand Overview (Insight)
 
 This repository is a shallow, upstream-safe rebrand of Onyx. Internal
 identifiers (Python package `onyx/`, Docker image names `onyxdotapp/onyx-*`,
@@ -26,7 +26,7 @@ low-conflict. All user-visible branding is driven by:
 
 1. **Runtime Enterprise Settings** (preferred) — the `application_name`,
    custom logo, and custom logotype are stored in the KV store + file store.
-   Seed with `scripts/insightai_brand.py` or change via the Admin > Theme UI
+   Seed with `scripts/insight_brand.py` or change via the Admin > Theme UI
    at `/admin/theme`. No source diff required.
 2. **A small set of fallback defaults** in code for when Enterprise Settings
    are unavailable (first boot, EE disabled). See
@@ -637,7 +637,7 @@ Or through the admin UI at **Admin** > **Users** > select user > change role.
 ## Appendix: Directory Structure
 
 ```
-InsightAI/
+Insight/
 ├── backend/                    # Python backend
 │   ├── onyx/                   # Core application
 │   │   ├── auth/               # Authentication & authorization
@@ -700,7 +700,7 @@ This fork already has the upstream Onyx repo wired as a second remote:
 
 ```bash
 $ git remote -v
-origin    https://github.com/KoloqAI/InsightAI.git (fetch/push)
+origin    https://github.com/KoloqAI/Insight.git (fetch/push)
 upstream  https://github.com/onyx-dot-app/onyx.git (fetch/push)
 ```
 
@@ -715,19 +715,19 @@ scripts/sync_upstream.sh fetch-only
 ```
 
 Any merge conflict should be confined to the "Branding patches" list below.
-Resolve by keeping the InsightAI side, then `git add && git commit`.
+Resolve by keeping the Insight side, then `git add && git commit`.
 
 ### Branding patches (source code)
 
-These five files carry hand-edited fallback defaults for the InsightAI
+These five files carry hand-edited fallback defaults for the Insight
 product name. Expected conflict surface on an upstream merge.
 
 | File | What changed |
 |---|---|
-| [backend/onyx/configs/constants.py](backend/onyx/configs/constants.py) | `ONYX_DEFAULT_APPLICATION_NAME = "InsightAI"` |
-| [web/src/providers/DynamicMetadata.tsx](web/src/providers/DynamicMetadata.tsx) | `document.title` fallback `"InsightAI"` |
+| [backend/onyx/configs/constants.py](backend/onyx/configs/constants.py) | `ONYX_DEFAULT_APPLICATION_NAME = "Insight"` |
+| [web/src/providers/DynamicMetadata.tsx](web/src/providers/DynamicMetadata.tsx) | `document.title` fallback `"Insight"` |
 | [web/src/app/layout.tsx](web/src/app/layout.tsx) | `metadata.title` and `metadata.description` |
-| [web/src/app/auth/login/LoginText.tsx](web/src/app/auth/login/LoginText.tsx) | Welcome heading fallback `"InsightAI"` |
+| [web/src/app/auth/login/LoginText.tsx](web/src/app/auth/login/LoginText.tsx) | Welcome heading fallback `"Insight"` |
 | [web/src/lib/constants.ts](web/src/lib/constants.ts) | `APP_SLOGAN = "AI-Powered Insight Platform"` |
 
 Deliberately **not** patched (keeps internal identifiers upstream-compatible):
@@ -748,13 +748,14 @@ source code references change:
 | Asset | Purpose |
 |---|---|
 | [web/public/logo.svg](web/public/logo.svg) | Generic SVG mark served at `/logo.svg` |
-| `web/public/onyx.ico` | Browser favicon (filename kept intentionally so [web/src/providers/DynamicMetadata.tsx](web/src/providers/DynamicMetadata.tsx) needs no change) |
+| `web/public/insight.svg` | SVG favicon (theme-aware, primary `<link rel="icon">`) |
+| `web/public/insight.ico` | Multi-resolution ICO fallback (16/32/48 px) for legacy browsers |
 | `backend/static/images/logo.png` | Default square logo; used by `OnyxRuntime` for API + email (`cid:logo.png`) |
 | `backend/static/images/logotype.png` | Default horizontal wordmark |
 
 To regenerate the placeholder assets from the `i` mark design, rerun
-[`/tmp/insightai_brand/generate_assets.py`](/) or replace with designer-produced
-assets at the same paths.
+[`scripts/generate_brand_assets.py`](scripts/generate_brand_assets.py) or
+replace with designer-produced assets at the same paths.
 
 ### One-shot brand bootstrap
 
@@ -763,13 +764,13 @@ For a live environment, after infra is up and the backend can import the
 
 ```bash
 source .venv/bin/activate
-python scripts/insightai_brand.py
+python scripts/insight_brand.py
 ```
 
-This sets `application_name = "InsightAI"`, enables `use_custom_logo` /
+This sets `application_name = "Insight"`, enables `use_custom_logo` /
 `use_custom_logotype`, and uploads `backend/static/images/logo.png` and
 `logotype.png` into the file store under the ids `__logo__` and
-`__logotype__`. After that, the admin UI's Theme page reflects InsightAI
+`__logotype__`. After that, the admin UI's Theme page reflects Insight
 and every consumer of `enterpriseSettings` renders the custom branding.
 
 Admins can later re-upload logos through the Admin > Theme UI at
@@ -780,7 +781,8 @@ Admins can later re-upload logos through the Admin > Theme UI at
 Four files, all kept at their original upstream paths:
 
 - `web/public/logo.svg`
-- `web/public/onyx.ico`
+- `web/public/insight.svg`   (favicon, replaces upstream `onyx.ico` reference)
+- `web/public/insight.ico`   (multi-resolution legacy fallback)
 - `backend/static/images/logo.png`
 - `backend/static/images/logotype.png`
 

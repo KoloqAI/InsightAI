@@ -37,21 +37,24 @@ function Main() {
   return (
     <div className="mb-8">
       <p className="mb-2 text-sm text-muted-foreground">
-        Setup Slack bots that connect to Onyx. Once setup, you will be able to
-        ask questions to Onyx directly from Slack. Additionally, you can:
+        Setup Slack bots that connect to Insight. Once setup, you will be
+        able to ask questions to Insight directly from Slack. Additionally,
+        you can:
       </p>
 
       <div className="mb-2">
         <ul className="list-disc mt-2 ml-4 text-sm text-muted-foreground">
           <li>
-            Setup OnyxBot to automatically answer questions in certain channels.
+            Setup the Slack bot to automatically answer questions in certain
+            channels.
           </li>
           <li>
-            Choose which document sets OnyxBot should answer from, depending on
-            the channel the question is being asked.
+            Choose which document sets the Slack bot should answer from,
+            depending on the channel the question is being asked.
           </li>
           <li>
-            Directly message OnyxBot to search just as you would in the web UI.
+            Directly message the Slack bot to search just as you would in the
+            web UI.
           </li>
         </ul>
       </div>
@@ -66,7 +69,7 @@ function Main() {
         >
           guide{" "}
         </a>
-        found in the Onyx documentation to get started!
+        to get started!
       </p>
 
       <CreateButton href="/admin/bots/new">New Slack Bot</CreateButton>

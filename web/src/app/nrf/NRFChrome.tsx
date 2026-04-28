@@ -70,9 +70,7 @@ export default function NRFChrome() {
 
   const customFooterContent =
     settings?.enterpriseSettings?.custom_lower_disclaimer_content ||
-    `[Onyx ${
-      settings?.webVersion || "dev"
-    }](https://www.onyx.app/) - Open Source AI Platform`;
+    `Insight ${settings?.webVersion || "dev"}`;
 
   const showModeToggle =
     isPaidEnterpriseFeaturesEnabled &&
