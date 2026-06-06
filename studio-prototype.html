@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Studio - UI Prototype</title>
+  <style>
+    :root {
+      --bg-primary: #0f1117;
+      --bg-secondary: #1a1d27;
+      --bg-tertiary: #242736;
+      --bg-hover: #2a2d3e;
+      --bg-active: #323650;
+      --border: #2e3348;
+      --text-primary: #e8eaed;
+      --text-secondary: #9aa0b4;
+      --text-muted: #6b7280;
+      --accent: #6366f1;
+      --accent-hover: #818cf8;
+      --accent-subtle: rgba(99, 102, 241, 0.12);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      padding: 0 20px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-secondary);
+      position: relative;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+
+    .logo-icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, var(--accent), #a855f7);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-icon svg {
+      width: 16px;
+      height: 16px;
+      fill: white;
+    }
+
+    /* Surface Toggle */
+    .surface-toggle {
+      display: flex;
+      align-items: center;
+      background: var(--bg-tertiary);
+      border-radius: 20px;
+      padding: 3px;
+      border: 1px solid var(--border);
+    }
+
+    .surface-toggle-btn {
+      padding: 6px 16px;
+      border-radius: 17px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .surface-toggle-btn.active {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+    }
+
+    .surface-toggle-btn:not(.active):hover {
+      color: var(--text-primary);
+      background: var(--bg-hover);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .header-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+    }
+
+    /* Main Layout */
+    .main-container {
+      display: flex;
+      height: calc(100vh - 56px);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sidebar-section {
+      padding: 16px 12px;
+    }
+
+    .sidebar-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      padding: 0 8px;
+      margin-bottom: 8px;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .sidebar-item:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .sidebar-item.active {
+      background: var(--accent-subtle);
+      color: var(--accent-hover);
+    }
+
+    .sidebar-item-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.7;
+    }
+
+    .project-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .new-project-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--accent);
+      border: 1px dashed var(--border);
+      transition: all 0.15s;
+      background: transparent;
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .new-project-btn:hover {
+      border-color: var(--accent);
+      background: var(--accent-subtle);
+    }
+
+    .sidebar-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 4px 12px;
+    }
+
+    /* Workspace */
+    .workspace {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .workspace-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-primary);
+    }
+
+    .workspace-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .workspace-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      padding: 7px 14px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 1px solid var(--border);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      background: var(--bg-hover);
+      border-color: var(--text-muted);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    /* Content Panels */
+    .workspace-content {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 320px 1fr 320px;
+      overflow: hidden;
+    }
+
+    .panel {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-right: 1px solid var(--border);
+    }
+
+    .panel:last-child {
+      border-right: none;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-secondary);
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-title .count {
+      background: var(--bg-tertiary);
+      padding: 1px 7px;
+      border-radius: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .panel-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+    }
+
+    /* Source Panel */
+    .source-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      transition: all 0.15s;
+      cursor: pointer;
+      margin-bottom: 4px;
+    }
+
+    .source-item:hover {
+      background: var(--bg-hover);
+    }
+
+    .source-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .source-icon.pdf { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .source-icon.doc { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+    .source-icon.sheet { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .source-icon.confluence { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+    .source-icon.slack { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
+
+    .source-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .source-name {
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .source-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .add-source-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px;
+      border-radius: var(--radius-md);
+      border: 1px dashed var(--border);
+      color: var(--text-muted);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-top: 8px;
+      background: transparent;
+      width: 100%;
+    }
+
+    .add-source-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-subtle);
+    }
+
+    /* Chat Panel */
+    .chat-panel {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .chat-message {
+      display: flex;
+      gap: 12px;
+      max-width: 100%;
+    }
+
+    .chat-message.user {
+      flex-direction: row-reverse;
+    }
+
+    .message-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .message-avatar.ai {
+      background: linear-gradient(135deg, var(--accent), #a855f7);
+      color: white;
+    }
+
+    .message-avatar.human {
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+    }
+
+    .message-content {
+      background: var(--bg-secondary);
+      padding: 12px 16px;
+      border-radius: var(--radius-lg);
+      font-size: 14px;
+      line-height: 1.6;
+      max-width: 80%;
+      border: 1px solid var(--border);
+    }
+
+    .chat-message.user .message-content {
+      background: var(--accent-subtle);
+      border-color: rgba(99, 102, 241, 0.2);
+    }
+
+    .citation {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: var(--accent-subtle);
+      color: var(--accent-hover);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .citation:hover {
+      background: rgba(99, 102, 241, 0.25);
+    }
+
+    .chat-input-container {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      background: var(--bg-primary);
+    }
+
+    .chat-input-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 10px 16px;
+      transition: border-color 0.15s;
+    }
+
+    .chat-input-wrapper:focus-within {
+      border-color: var(--accent);
+    }
+
+    .chat-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-primary);
+      font-size: 14px;
+    }
+
+    .chat-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .chat-send-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-md);
+      background: var(--accent);
+      border: none;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .chat-send-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .grounding-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--success);
+      margin-top: 4px;
+    }
+
+    .grounding-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+
+    /* Generate Panel */
+    .generate-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .generate-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 14px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      background: var(--bg-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .generate-card:hover {
+      border-color: var(--accent);
+      background: var(--accent-subtle);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+    }
+
+    .generate-card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .generate-card-icon.deck { background: rgba(251, 146, 60, 0.15); color: #fb923c; }
+    .generate-card-icon.onepager { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+    .generate-card-icon.brief { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
+    .generate-card-icon.prep { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .generate-card-icon.status { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .generate-card-icon.audio { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
+    .generate-card-icon.research { background: rgba(99, 102, 241, 0.15); color: #6366f1; }
+
+    .generate-card-info {
+      flex: 1;
+    }
+
+    .generate-card-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .generate-card-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .generate-card-arrow {
+      color: var(--text-muted);
+      font-size: 14px;
+      transition: transform 0.15s;
+    }
+
+    .generate-card:hover .generate-card-arrow {
+      transform: translateX(2px);
+      color: var(--accent);
+    }
+
+    /* Template Picker */
+    .template-section {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .template-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      padding: 0 4px;
+    }
+
+    .template-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-bottom: 2px;
+    }
+
+    .template-item:hover {
+      background: var(--bg-hover);
+    }
+
+    .template-item.selected {
+      background: var(--accent-subtle);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+
+    .template-thumb {
+      width: 32px;
+      height: 40px;
+      border-radius: 4px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .template-info {
+      flex: 1;
+    }
+
+    .template-name {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .template-meta {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    /* Artifacts */
+    .artifacts-section {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .artifact-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      background: var(--bg-tertiary);
+      margin-bottom: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .artifact-status {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+
+    .artifact-info { flex: 1; }
+    .artifact-title { font-size: 12px; font-weight: 500; }
+    .artifact-meta { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+    .artifact-download {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .artifact-download:hover {
+      background: var(--bg-hover);
+      color: var(--accent);
+    }
+
+    /* Search & Chat Surface */
+    .search-surface {
+      display: none;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 24px;
+      padding: 40px;
+    }
+
+    .search-surface.active {
+      display: flex;
+    }
+
+    .studio-surface {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .studio-surface.active {
+      display: flex;
+    }
+
+    .search-hero {
+      text-align: center;
+    }
+
+    .search-hero h2 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .search-hero p {
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+
+    .search-input-large {
+      width: 100%;
+      max-width: 640px;
+      padding: 14px 20px;
+      border-radius: var(--radius-xl);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .search-input-large:focus {
+      border-color: var(--accent);
+    }
+
+    /* Upgrade Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 40px;
+      max-width: 480px;
+      width: 90%;
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+    }
+
+    .modal-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-lg);
+      background: var(--accent-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 24px;
+    }
+
+    .modal h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .modal p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .modal-features {
+      text-align: left;
+      margin-bottom: 28px;
+    }
+
+    .modal-feature {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .modal-feature-check {
+      color: var(--success);
+      font-weight: bold;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .modal-actions .btn {
+      justify-content: center;
+      padding: 12px 20px;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border-color: transparent;
+      color: var(--text-muted);
+    }
+
+    .btn-ghost:hover {
+      color: var(--text-primary);
+      background: var(--bg-hover);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--bg-active);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-muted);
+    }
+
+    /* Generating Animation */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .generating {
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px 20px;
+      box-shadow: var(--shadow-lg);
+      display: none;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      z-index: 1001;
+      animation: slideUp 0.3s ease;
+    }
+
+    .toast.active {
+      display: flex;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .toast-icon {
+      color: var(--success);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        Insight
+      </div>
+      <div class="surface-toggle">
+        <button class="surface-toggle-btn active" id="toggle-search" onclick="switchSurface('search')">Search & Chat</button>
+        <button class="surface-toggle-btn" id="toggle-studio" onclick="switchSurface('studio')">Studio</button>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="header-btn" title="Notifications">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </button>
+      <button class="header-btn" title="Settings">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+      <div class="avatar">VK</div>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <!-- Search & Chat Surface -->
+    <div class="search-surface active" id="surface-search">
+      <div class="search-hero">
+        <h2>What would you like to know?</h2>
+        <p>Search across your company's documents, apps, and knowledge</p>
+      </div>
+      <input type="text" class="search-input-large" placeholder="Ask anything or search documents...">
+    </div>
+
+    <!-- Studio Surface -->
+    <div class="studio-surface" id="surface-studio">
+      <!-- Sidebar -->
+      <div style="display: flex; height: 100%;">
+        <aside class="sidebar">
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">Projects</div>
+            <div class="sidebar-item active">
+              <span class="project-dot" style="background: #fb923c;"></span>
+              Q3 Board Update
+            </div>
+            <div class="sidebar-item">
+              <span class="project-dot" style="background: #3b82f6;"></span>
+              RFP Response - Acme Corp
+            </div>
+            <div class="sidebar-item">
+              <span class="project-dot" style="background: #10b981;"></span>
+              Weekly Leadership Update
+            </div>
+            <div class="sidebar-item">
+              <span class="project-dot" style="background: #a855f7;"></span>
+              New Hire Onboarding Kit
+            </div>
+            <button class="new-project-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              New Project
+            </button>
+          </div>
+
+          <div class="sidebar-divider"></div>
+
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">Recent Artifacts</div>
+            <div class="artifact-item">
+              <span class="artifact-status"></span>
+              <div class="artifact-info">
+                <div class="artifact-title">Q3 Board Deck</div>
+                <div class="artifact-meta">PPTX &middot; 2 hours ago</div>
+              </div>
+              <button class="artifact-download">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </button>
+            </div>
+            <div class="artifact-item">
+              <span class="artifact-status"></span>
+              <div class="artifact-info">
+                <div class="artifact-title">Executive Brief</div>
+                <div class="artifact-meta">DOCX &middot; Yesterday</div>
+              </div>
+              <button class="artifact-download">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </button>
+            </div>
+            <div class="artifact-item">
+              <span class="artifact-status" style="background: var(--warning);"></span>
+              <div class="artifact-info">
+                <div class="artifact-title">Audio Overview</div>
+                <div class="artifact-meta">MP3 &middot; Generating...</div>
+              </div>
+              <button class="artifact-download" disabled>
+                <svg class="generating" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Workspace -->
+        <div class="workspace">
+          <div class="workspace-header">
+            <div class="workspace-title">Q3 Board Update</div>
+            <div class="workspace-actions">
+              <button class="btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Share
+              </button>
+              <button class="btn btn-primary" onclick="showToast()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export All
+              </button>
+            </div>
+          </div>
+
+          <div class="workspace-content">
+            <!-- Sources Panel -->
+            <div class="panel">
+              <div class="panel-header">
+                <span class="panel-title">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  Sources <span class="count">8</span>
+                </span>
+                <button class="btn" style="padding: 4px 8px; font-size: 11px;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add
+                </button>
+              </div>
+              <div class="panel-body">
+                <div class="source-item">
+                  <div class="source-icon pdf">PDF</div>
+                  <div class="source-info">
+                    <div class="source-name">Q3_Financial_Results.pdf</div>
+                    <div class="source-meta">42 pages &middot; 2.1 MB</div>
+                  </div>
+                </div>
+                <div class="source-item">
+                  <div class="source-icon sheet">XLS</div>
+                  <div class="source-info">
+                    <div class="source-name">Revenue_Metrics_Q3.xlsx</div>
+                    <div class="source-meta">12 sheets &middot; 890 KB</div>
+                  </div>
+                </div>
+                <div class="source-item">
+                  <div class="source-icon pdf">PDF</div>
+                  <div class="source-info">
+                    <div class="source-name">Product_Roadmap_2024.pdf</div>
+                    <div class="source-meta">18 pages &middot; 1.4 MB</div>
+                  </div>
+                </div>
+                <div class="source-item">
+                  <div class="source-icon confluence">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                  </div>
+                  <div class="source-info">
+                    <div class="source-name">OKRs & Key Results - Q3</div>
+                    <div class="source-meta">Confluence &middot; Updated 3d ago</div>
+                  </div>
+                </div>
+                <div class="source-item">
+                  <div class="source-icon confluence">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                  </div>
+                  <div class="source-info">
+                    <div class="source-name">Engineering Velocity Report</div>
+                    <div class="source-meta">Confluence &middot; Updated 1w ago</div>
+                  </div>
+                </div>
+                <div class="source-item">
+                  <div class="source-icon doc">DOC</div>
+                  <div class="source-info">
+                    <div class="source-name">Customer_Success_Highlights.docx</div>
+                    <div class="source-meta">8 pages &middot; 340 KB</div>
+                  </div>
+                </div>
+                <div class="source-item">
+                  <div class="source-icon slack">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+                  </div>
+                  <div class="source-info">
+                    <div class="source-name">#q3-revenue-discussion</div>
+                    <div class="source-meta">Slack &middot; 47 messages</div>
+                  </div>
+                </div>
+                <div class="source-item">
+                  <div class="source-icon pdf">PDF</div>
+                  <div class="source-info">
+                    <div class="source-name">Market_Analysis_Report.pdf</div>
+                    <div class="source-meta">26 pages &middot; 3.2 MB</div>
+                  </div>
+                </div>
+
+                <button class="add-source-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add sources from connectors, uploads, or URLs
+                </button>
+              </div>
+            </div>
+
+            <!-- Chat Panel (Center) -->
+            <div class="panel chat-panel">
+              <div class="panel-header">
+                <span class="panel-title">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Grounded Chat
+                </span>
+                <div class="grounding-badge">Answers from sources only</div>
+              </div>
+              <div class="chat-messages">
+                <div class="chat-message user">
+                  <div class="message-avatar human">VK</div>
+                  <div class="message-content">
+                    What were the key revenue highlights from Q3? Include year-over-year growth.
+                  </div>
+                </div>
+                <div class="chat-message">
+                  <div class="message-avatar ai">AI</div>
+                  <div class="message-content">
+                    Based on the Q3 financial results, here are the key revenue highlights:
+                    <br><br>
+                    <strong>Total Revenue:</strong> $142.3M, representing <strong>23% YoY growth</strong> <span class="citation" onclick="showToast()">Q3_Financial p.4</span>
+                    <br><br>
+                    <strong>ARR:</strong> Crossed $500M milestone, up from $412M in Q3 last year <span class="citation" onclick="showToast()">Revenue_Metrics sheet 2</span>
+                    <br><br>
+                    <strong>Net Revenue Retention:</strong> 127%, driven by expansion in Enterprise segment <span class="citation" onclick="showToast()">Q3_Financial p.12</span>
+                    <br><br>
+                    <strong>New Logo Acquisition:</strong> 84 new enterprise customers (+31% YoY), with average ACV of $280K <span class="citation" onclick="showToast()">Customer_Success p.3</span>
+                    <br><br>
+                    The revenue acceleration was primarily driven by the platform expansion strategy outlined in the product roadmap, with multi-product adoption increasing to 3.2 products per customer. <span class="citation" onclick="showToast()">Product_Roadmap p.7</span>
+                  </div>
+                </div>
+                <div class="chat-message user">
+                  <div class="message-avatar human">VK</div>
+                  <div class="message-content">
+                    What were the main blockers or risks called out?
+                  </div>
+                </div>
+                <div class="chat-message">
+                  <div class="message-avatar ai">AI</div>
+                  <div class="message-content">
+                    Three primary risks were identified across the source documents:
+                    <br><br>
+                    <strong>1. Enterprise pipeline compression:</strong> Sales cycle length increased 18% in Q3, attributed to economic uncertainty. The team flagged this as a potential headwind for Q4 targets. <span class="citation" onclick="showToast()">Q3_Financial p.18</span>
+                    <br><br>
+                    <strong>2. Engineering velocity:</strong> Velocity dropped 12% in the second half of Q3 due to the platform migration. Expected to recover in Q4 as migration completes. <span class="citation" onclick="showToast()">Eng_Velocity Report</span>
+                    <br><br>
+                    <strong>3. Competitive pressure:</strong> Two new entrants in the mid-market segment were noted in the Slack discussion, with one offering aggressive pricing. <span class="citation" onclick="showToast()">#q3-revenue thread</span>
+                  </div>
+                </div>
+              </div>
+              <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                  <input type="text" class="chat-input" placeholder="Ask about your sources...">
+                  <button class="chat-send-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Generate Panel (Right) -->
+            <div class="panel">
+              <div class="panel-header">
+                <span class="panel-title">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  Generate
+                </span>
+              </div>
+              <div class="panel-body">
+                <div class="generate-grid">
+                  <div class="generate-card" onclick="showToast()">
+                    <div class="generate-card-icon deck">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                    </div>
+                    <div class="generate-card-info">
+                      <div class="generate-card-title">Board Deck</div>
+                      <div class="generate-card-desc">Presentation slides for board meetings</div>
+                    </div>
+                    <span class="generate-card-arrow">&rarr;</span>
+                  </div>
+
+                  <div class="generate-card" onclick="showToast()">
+                    <div class="generate-card-icon onepager">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </div>
+                    <div class="generate-card-info">
+                      <div class="generate-card-title">One-Pager</div>
+                      <div class="generate-card-desc">Single-page executive summary</div>
+                    </div>
+                    <span class="generate-card-arrow">&rarr;</span>
+                  </div>
+
+                  <div class="generate-card" onclick="showToast()">
+                    <div class="generate-card-icon brief">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    </div>
+                    <div class="generate-card-info">
+                      <div class="generate-card-title">Executive Brief</div>
+                      <div class="generate-card-desc">Detailed brief with analysis and recs</div>
+                    </div>
+                    <span class="generate-card-arrow">&rarr;</span>
+                  </div>
+
+                  <div class="generate-card" onclick="showToast()">
+                    <div class="generate-card-icon prep">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </div>
+                    <div class="generate-card-info">
+                      <div class="generate-card-title">Meeting Prep</div>
+                      <div class="generate-card-desc">Talking points, agenda, and context</div>
+                    </div>
+                    <span class="generate-card-arrow">&rarr;</span>
+                  </div>
+
+                  <div class="generate-card" onclick="showToast()">
+                    <div class="generate-card-icon status">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    </div>
+                    <div class="generate-card-info">
+                      <div class="generate-card-title">Status Update</div>
+                      <div class="generate-card-desc">Progress, blockers, and next steps</div>
+                    </div>
+                    <span class="generate-card-arrow">&rarr;</span>
+                  </div>
+
+                  <div class="generate-card" onclick="showToast()">
+                    <div class="generate-card-icon audio">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+                    </div>
+                    <div class="generate-card-info">
+                      <div class="generate-card-title">Audio Overview</div>
+                      <div class="generate-card-desc">Podcast-style summary of sources</div>
+                    </div>
+                    <span class="generate-card-arrow">&rarr;</span>
+                  </div>
+
+                  <div class="generate-card" onclick="showToast()">
+                    <div class="generate-card-icon research">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </div>
+                    <div class="generate-card-info">
+                      <div class="generate-card-title">Deep Research</div>
+                      <div class="generate-card-desc">Multi-step analysis with web + sources</div>
+                    </div>
+                    <span class="generate-card-arrow">&rarr;</span>
+                  </div>
+                </div>
+
+                <!-- Template Section -->
+                <div class="template-section">
+                  <div class="template-section-title">Active Template</div>
+                  <div class="template-item selected">
+                    <div class="template-thumb">PPTX</div>
+                    <div class="template-info">
+                      <div class="template-name">Corporate Board Deck</div>
+                      <div class="template-meta">Default &middot; 16:9 layout</div>
+                    </div>
+                  </div>
+                  <div class="template-item">
+                    <div class="template-thumb">DOCX</div>
+                    <div class="template-info">
+                      <div class="template-name">Executive Brief Template</div>
+                      <div class="template-meta">2-page format</div>
+                    </div>
+                  </div>
+                  <div class="template-item">
+                    <div class="template-thumb">DOCX</div>
+                    <div class="template-info">
+                      <div class="template-name">One-Pager - Standard</div>
+                      <div class="template-meta">Single page, branded</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upgrade Modal -->
+  <div class="modal-overlay" id="upgrade-modal">
+    <div class="modal">
+      <div class="modal-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
+      <h3>Unlock Studio</h3>
+      <p>Create branded presentations, executive briefs, and meeting content powered by your company's knowledge base.</p>
+      <div class="modal-features">
+        <div class="modal-feature">
+          <span class="modal-feature-check">&#10003;</span>
+          One-click board decks, one-pagers, and status updates
+        </div>
+        <div class="modal-feature">
+          <span class="modal-feature-check">&#10003;</span>
+          Company-branded templates (PPTX, DOCX, PDF)
+        </div>
+        <div class="modal-feature">
+          <span class="modal-feature-check">&#10003;</span>
+          Grounded AI chat — answers only from your sources
+        </div>
+        <div class="modal-feature">
+          <span class="modal-feature-check">&#10003;</span>
+          Audio overviews and podcast-style summaries
+        </div>
+        <div class="modal-feature">
+          <span class="modal-feature-check">&#10003;</span>
+          Pull from 50+ connected data sources
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick="closeModal(); switchSurface('studio', true);">Get Studio — $29/seat/month</button>
+        <button class="btn btn-ghost" onclick="closeModal()">Maybe later</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <span class="toast-icon">&#10003;</span>
+    <span id="toast-text">Citation viewer opened — Q3_Financial_Results.pdf, page 4</span>
+  </div>
+
+  <script>
+    let studioEntitled = true;
+
+    function switchSurface(surface, bypassCheck) {
+      const searchSurface = document.getElementById('surface-search');
+      const studioSurface = document.getElementById('surface-studio');
+      const toggleSearch = document.getElementById('toggle-search');
+      const toggleStudio = document.getElementById('toggle-studio');
+
+      if (surface === 'studio' && !studioEntitled && !bypassCheck) {
+        document.getElementById('upgrade-modal').classList.add('active');
+        return;
+      }
+
+      if (surface === 'studio') {
+        searchSurface.classList.remove('active');
+        studioSurface.classList.add('active');
+        toggleSearch.classList.remove('active');
+        toggleStudio.classList.add('active');
+      } else {
+        studioSurface.classList.remove('active');
+        searchSurface.classList.add('active');
+        toggleStudio.classList.remove('active');
+        toggleSearch.classList.add('active');
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('upgrade-modal').classList.remove('active');
+    }
+
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      if (text) document.getElementById('toast-text').textContent = text;
+      toast.classList.add('active');
+      setTimeout(() => toast.classList.remove('active'), 3000);
+    }
+
+    // Toggle entitlement for demo purposes
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'u') {
+        studioEntitled = !studioEntitled;
+        showToast(studioEntitled ? 'Demo: User is now entitled (has seat)' : 'Demo: User is now NOT entitled (no seat)');
+      }
+    });
+  </script>
+</body>
+</html>

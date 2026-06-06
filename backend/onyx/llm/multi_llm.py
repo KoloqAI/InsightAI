@@ -1,3 +1,4 @@
+import copy
 import os
 import threading
 from collections.abc import Iterator
@@ -9,6 +10,7 @@ from typing import TYPE_CHECKING
 from typing import Union
 
 from onyx.configs.app_configs import MOCK_LLM_RESPONSE
+from onyx.configs.app_configs import SEND_USER_METADATA_TO_LLM_PROVIDER
 from onyx.configs.chat_configs import LLM_SOCKET_READ_TIMEOUT
 from onyx.configs.model_configs import GEN_AI_TEMPERATURE
 from onyx.configs.model_configs import LITELLM_EXTRA_BODY
@@ -45,11 +47,14 @@ from onyx.llm.well_known_providers.constants import (
 )
 from onyx.llm.well_known_providers.constants import LM_STUDIO_API_KEY_CONFIG_KEY
 from onyx.llm.well_known_providers.constants import OLLAMA_API_KEY_CONFIG_KEY
+from onyx.llm.well_known_providers.constants import VERTEX_AUTH_METHOD_KWARG
+from onyx.llm.well_known_providers.constants import VERTEX_AUTH_METHOD_WORKLOAD_IDENTITY
 from onyx.llm.well_known_providers.constants import VERTEX_CREDENTIALS_FILE_KWARG
 from onyx.llm.well_known_providers.constants import (
     VERTEX_CREDENTIALS_FILE_KWARG_ENV_VAR_FORMAT,
 )
 from onyx.llm.well_known_providers.constants import VERTEX_LOCATION_KWARG
+from onyx.llm.well_known_providers.constants import VERTEX_PROJECT_KWARG
 from onyx.utils.encryption import mask_string
 from onyx.utils.logger import setup_logger
 
@@ -69,11 +74,32 @@ _VERTEX_ANTHROPIC_MODELS_REJECTING_OUTPUT_CONFIG = (
     "claude-opus-4-5",
     "claude-opus-4-6",
     "claude-opus-4-7",
+    "claude-opus-4-8",
 )
 
 # Anthropic models that require the adaptive thinking API (thinking.type.adaptive
 # + output_config.effort) instead of the legacy thinking.type.enabled + budget_tokens.
-_ANTHROPIC_ADAPTIVE_THINKING_MODELS = ("claude-opus-4-7",)
+_ANTHROPIC_ADAPTIVE_THINKING_MODELS = (
+    "claude-opus-4-7",
+    "claude-opus-4-8",
+)
+
+# Anthropic models that reject any non-default sampling parameter (temperature,
+# top_p, top_k). For these models we must omit these params entirely from the
+# request payload — passing them returns a 400 invalid_request_error. LiteLLM's
+# drop_params is unreliable here because AnthropicConfig still lists temperature
+# as supported. Match on substring to cover proxy/Vertex naming variants (e.g.
+# "claude-4.7-opus" via litellm_proxy).
+_ANTHROPIC_NO_SAMPLING_PARAMS_MODELS = (
+    "claude-opus-4-7",
+    "claude-opus-4.7",
+    "claude-4-7-opus",
+    "claude-4.7-opus",
+    "claude-opus-4-8",
+    "claude-opus-4.8",
+    "claude-4-8-opus",
+    "claude-4.8-opus",
+)
 
 
 class LLMTimeoutError(Exception):
@@ -244,6 +270,14 @@ def _anthropic_uses_adaptive_thinking(model_name: str) -> bool:
     )
 
 
+def _anthropic_omits_sampling_params(model_name: str) -> bool:
+    normalized_model_name = model_name.lower()
+    return any(
+        no_sampling_model in normalized_model_name
+        for no_sampling_model in _ANTHROPIC_NO_SAMPLING_PARAMS_MODELS
+    )
+
+
 class LitellmLLM(LLM):
     """Uses Litellm library to allow easy configuration to use a multitude of LLMs
     See https://python.langchain.com/docs/integrations/chat/litellm"""
@@ -289,14 +323,29 @@ class LitellmLLM(LLM):
         # Create a dictionary for model-specific arguments if it's None
         model_kwargs = model_kwargs or {}
 
+        vertex_auth_method = (
+            (custom_config or {}).get(VERTEX_AUTH_METHOD_KWARG)
+            if model_provider == LlmProviderNames.VERTEX_AI
+            else None
+        )
+        vertex_is_workload_identity = (
+            vertex_auth_method == VERTEX_AUTH_METHOD_WORKLOAD_IDENTITY
+        )
+
         if custom_config:
             for k, v in custom_config.items():
                 if model_provider == LlmProviderNames.VERTEX_AI:
+                    # In Workload Identity mode, omit vertex_credentials so LiteLLM
+                    # falls back to google.auth.default() (the GKE metadata server).
                     if k == VERTEX_CREDENTIALS_FILE_KWARG:
-                        model_kwargs[k] = v
+                        if not vertex_is_workload_identity:
+                            model_kwargs[k] = v
                     elif k == VERTEX_CREDENTIALS_FILE_KWARG_ENV_VAR_FORMAT:
-                        model_kwargs[VERTEX_CREDENTIALS_FILE_KWARG] = v
+                        if not vertex_is_workload_identity:
+                            model_kwargs[VERTEX_CREDENTIALS_FILE_KWARG] = v
                     elif k == VERTEX_LOCATION_KWARG:
+                        model_kwargs[k] = v
+                    elif k == VERTEX_PROJECT_KWARG:
                         model_kwargs[k] = v
                 elif model_provider == LlmProviderNames.OLLAMA_CHAT:
                     if k == OLLAMA_API_KEY_CONFIG_KEY:
@@ -421,7 +470,7 @@ class LitellmLLM(LLM):
                 db_session.commit()
         except Exception as e:
             # Log but don't fail the LLM call if tracking fails
-            logger.warning(f"Failed to track LLM cost: {e}")
+            logger.warning("Failed to track LLM cost: %s", e)
 
     def _completion(
         self,
@@ -501,7 +550,17 @@ class LitellmLLM(LLM):
             tool_choice = None
 
         # Temperature
-        temperature = 1 if is_reasoning else self._temperature
+        # Some models reject any non-default sampling parameter (e.g. Claude
+        # Opus 4.7/4.8 return a 400 invalid_request_error if temperature is set
+        # to anything). For those models we must omit the param entirely —
+        # LiteLLM's drop_params is not reliable here because the upstream
+        # provider config can still claim the param is supported.
+        # https://github.com/BerriAI/litellm/issues/26444
+        # TODO(litellm): Consider removing this once the above is resolved,
+        # although this assumes users have upgraded their litellm if relevant.
+        omits_sampling_params = _anthropic_omits_sampling_params(self.config.model_name)
+        if not omits_sampling_params:
+            optional_kwargs["temperature"] = 1 if is_reasoning else self._temperature
 
         if stream and not is_vertex_model_rejecting_output_config:
             optional_kwargs["stream_options"] = {"include_usage": True}
@@ -601,6 +660,48 @@ class LitellmLLM(LLM):
             user_identity=user_identity,
         )
 
+        # OpenRouter: inject session_id and user into extra_body.
+        #
+        # session_id — sticky routing: pins all turns of a conversation to the
+        # same upstream provider, enabling prompt cache hits across turns.
+        # Without this, OpenRouter may alternate between e.g. Anthropic and Google
+        # for the same model, causing cache misses on every other turn.
+        # See: https://openrouter.ai/docs/features/provider-routing#session-id
+        #
+        # user — activity tracking: OpenRouter reads the user identifier from
+        # extra_body for its per-user activity logs; the top-level LiteLLM
+        # `user` parameter is forwarded to the upstream model but is not picked
+        # up by OpenRouter's own tracking dashboard.
+        #
+        # Both are gated on SEND_USER_METADATA_TO_LLM_PROVIDER: an operator who
+        # opted out of sending session/user identifiers to providers should not
+        # have them forwarded to OpenRouter either.
+        if (
+            SEND_USER_METADATA_TO_LLM_PROVIDER
+            and self._model_provider == LlmProviderNames.OPENROUTER
+            and user_identity is not None
+        ):
+            extra_body_updates: dict[str, str] = {}
+            if user_identity.session_id:
+                extra_body_updates["session_id"] = user_identity.session_id
+            if user_identity.user_id:
+                extra_body_updates["user"] = user_identity.user_id
+            if extra_body_updates:
+                if passthrough_kwargs is self._model_kwargs:
+                    passthrough_kwargs = copy.deepcopy(self._model_kwargs)
+                existing_extra_body = passthrough_kwargs.get("extra_body") or {}
+                if isinstance(existing_extra_body, dict):
+                    passthrough_kwargs["extra_body"] = {
+                        **existing_extra_body,
+                        **extra_body_updates,
+                    }
+                else:
+                    logger.warning(
+                        "OpenRouter extra_body injection: extra_body is not a dict (%s), "
+                        "skipping session_id/user injection",
+                        type(existing_extra_body).__name__,
+                    )
+
         try:
             # NOTE: must pass in None instead of empty strings otherwise litellm
             # can have some issues with bedrock.
@@ -660,7 +761,6 @@ class LitellmLLM(LLM):
                     messages=messages,
                     tools=tools,
                     stream=stream,
-                    temperature=temperature,
                     timeout=timeout_override or self._timeout,
                     max_tokens=max_tokens,
                     client=client,
